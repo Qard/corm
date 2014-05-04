@@ -74,7 +74,7 @@ Remove the record that matches the query.
 #### yield Model.count(query)
 Count number of records matching the query.
 
-#### yield Model.index(...)
+#### Model.index(...)
 Currently, this is passed through directly to monk.
 
 ### Methods
