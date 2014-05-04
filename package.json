@@ -1,0 +1,19 @@
+{
+  "name": "corm",
+  "version": "0.1.0",
+  "description": "An ORM using generators and co",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --harmony"
+  },
+  "author": "Stephen Belanger <admin@stephenbelanger.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "co-mocha": "0.0.2",
+    "mocha": "^1.18.2",
+    "should": "^3.3.1"
+  },
+  "dependencies": {
+    "monk": "^0.8.1"
+  }
+}
