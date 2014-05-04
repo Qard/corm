@@ -2,7 +2,7 @@
 
 ![i like corm](http://kimaguresan.files.wordpress.com/2014/02/f3b0e52f0cb3ecbf0ee58978238b6563_h.jpg)
 
-This is the beginnings of a project to make a full-featured ORM that takes advantage of generators for control flow, which should make the codebase and usage of the library vastly simpler. I spent weeks digging through existing node ORM implementations, only to find myself dissatisfied with how convoluted they all seemed to be.
+This is the beginnings of a project to make a full-featured ORM that takes advantage of generators, which should make the codebase and usage of the library vastly simpler. I spent weeks digging through existing node ORM implementations, only to find myself dissatisfied with how convoluted they all seemed to be.
 
 ## Installation
 

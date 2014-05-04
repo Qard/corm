@@ -4,11 +4,22 @@
   "description": "An ORM using generators and co",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --harmony"
+    "test": "mocha --harmony",
+    "coverage": "npm run coverage:report",
+    "coverage:build": "rm -rf coverage && node --harmony node_modules/.bin/istanbul cover _mocha",
+    "coverage:report": "npm run coverage:build && istanbul report",
+    "coverage:html": "npm run coverage && open coverage/lcov-report/index.html",
+    "watch:test": "onchange 'index.js' 'lib/*.js' -- npm test"
   },
   "author": "Stephen Belanger <admin@stephenbelanger.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Qard/corm.git"
+  },
   "license": "MIT",
   "devDependencies": {
+    "istanbul": "git://github.com/gotwarlost/istanbul.git#harmony",
+    "onchange": "0.0.1",
     "co-mocha": "0.0.2",
     "mocha": "^1.18.2",
     "should": "^3.3.1"
