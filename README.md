@@ -77,7 +77,7 @@ Count number of records matching the query.
 #### Model.index(...)
 Currently, this is passed through directly to monk.
 
-### Methods
+### Base methods
 
 #### model.isNew()
 This method is mostly used internally to detect if a model exists in the database already. Currently, it simply checks for existence of a `_id` property.
@@ -93,6 +93,21 @@ Remove the model from the database.
 
 #### yield model.fetch()
 Fetch the latest model state from the database.
+
+### Hook methods
+
+There are several hook methods that can be overridden to trigger things before or after various interactions. Each must be a generator function. These methods include:
+
+- `beforeSave`
+- `beforeCreate`
+- `beforeUpdate`
+- `beforeRemove`
+- `beforeValidate`
+- `afterSave`
+- `afterCreate`
+- `afterUpdate`
+- `afterRemove`
+- `afterValidate`
 
 ---
 
