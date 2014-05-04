@@ -30,6 +30,16 @@ yield user.update({
 yield user.remove()
 ```
 
+## Notes
+
+In typical node fashion, this module is meant to be simple. This means it lacks many features you may expect of an ORM which are intended to be implemented externally. Here are a few to be aware of:
+
+- No schema validation, but you can do that yourself by overriding model.validate().
+- No multi-error support from model.validate(). It expects a single throw, but you can populate a model.errors array yourself.
+- There is not yet any relational components, that will likely be an external module.
+- Hooks are single functions. I'll likely write a middleware-based hook chaining thing later.
+- Presently, it is completely tied to mongodb + monk. This will change later when I figure out a good plugin interface.
+
 ## Model API
 
 ### Statics
@@ -83,12 +93,6 @@ Remove the model from the database.
 
 #### yield model.fetch()
 Fetch the latest model state from the database.
-
-## TODO
-
-- Relations (also, dependent deletion)
-- Write a better hook system (multiple hooks would be nice, maybe use() middleware?)
-- Decouple from monk, eventually?
 
 ---
 
