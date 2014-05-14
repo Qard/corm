@@ -64,4 +64,17 @@ describe('find', function () {
       user.should.have.property('name', users[i].name)
     })
   })
+
+  it('should not fetch a model without an id', function* () {
+    var model = new User({})
+    var err
+    try {
+      yield model.fetch()
+    } catch (e) {
+      err = e
+    }
+
+    err.should.be.an.instanceof(Error)
+    err.should.have.property('message', 'cannot fetch unsaved model')
+  })
 })

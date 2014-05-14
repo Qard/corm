@@ -68,4 +68,17 @@ describe('update', function () {
     // Remove the test data
     yield UserCollection.remove({ _id: user._id })
   })
+
+  it('should not update a model without an id', function* () {
+    var model = new User({})
+    var err
+    try {
+      yield model.update()
+    } catch (e) {
+      err = e
+    }
+
+    err.should.be.an.instanceof(Error)
+    err.should.have.property('message', 'cannot update unsaved model')
+  })
 })

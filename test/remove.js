@@ -50,4 +50,17 @@ describe('remove', function () {
     var found = yield UserCollection.findById(testUser._id)
     should.not.exist(found)
   })
+
+  it('should not remove a model without an id', function* () {
+    var model = new User({})
+    var err
+    try {
+      yield model.remove()
+    } catch (e) {
+      err = e
+    }
+
+    err.should.be.an.instanceof(Error)
+    err.should.have.property('message', 'cannot remove unsaved model')
+  })
 })
