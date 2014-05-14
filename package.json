@@ -1,8 +1,10 @@
 {
   "name": "corm",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "An ORM using generators and co",
+  "author": "Stephen Belanger <admin@stephenbelanger.com>",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
     "test": "npm run coveralls",
     "coverage": "npm run coverage:report",
@@ -11,20 +13,18 @@
     "coverage:html": "npm run coverage:full && open coverage/lcov-report/index.html",
     "coveralls": "npm run coverage:build && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
-  "author": "Stephen Belanger <admin@stephenbelanger.com>",
   "repository": {
     "type": "git",
     "url": "git://github.com/Qard/corm.git"
   },
-  "license": "MIT",
+  "dependencies": {
+    "monk": "^0.8.1"
+  },
   "devDependencies": {
     "istanbul": "git://github.com/gotwarlost/istanbul.git#harmony",
     "coveralls": "^2.10.0",
     "co-mocha": "0.0.2",
     "mocha": "^1.18.2",
     "should": "^3.3.1"
-  },
-  "dependencies": {
-    "monk": "^0.8.1"
   }
 }
