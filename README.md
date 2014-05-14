@@ -37,7 +37,6 @@ In typical node fashion, this module is meant to be simple. This means it lacks 
 - No schema validation, but you can do that yourself by overriding model.validate().
 - No multi-error support from model.validate(). It expects a single throw, but you can populate a model.errors array yourself.
 - There is not yet any relational components, that will likely be an external module.
-- Hooks are single functions. I'll likely write a middleware-based hook chaining thing later.
 - Presently, it is completely tied to mongodb + monk. This will change later when I figure out a good plugin interface.
 
 ## Model API
@@ -58,6 +57,12 @@ Find one model instance using a query object.
 
 #### yield Model.findById(id)
 Find one model instance by id.
+
+#### yield Model.findOrCreate(data)
+Find or create a model instance given a set of data
+
+#### yield Model.createOrUpdate(query, changes)
+Create or update a model instance given a query and change set
 
 #### yield Model.update(query, data)
 Update any records that match the query.
