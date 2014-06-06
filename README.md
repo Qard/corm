@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/qard/corm.png?label=ready&title=Ready)](https://waffle.io/qard/corm)
 # CORM
 
 ![i like corm](http://kimaguresan.files.wordpress.com/2014/02/f3b0e52f0cb3ecbf0ee58978238b6563_h.jpg)
