@@ -1,6 +1,6 @@
 {
   "name": "corm",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "An ORM using generators and co",
   "author": "Stephen Belanger <admin@stephenbelanger.com>",
   "main": "index.js",
