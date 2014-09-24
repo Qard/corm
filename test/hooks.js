@@ -1,19 +1,28 @@
-const monk = require('monk')
-const corm = require('../')
+var MongoClient = require('mongodb').MongoClient
+var corm = require('../')
 
 describe('hooks', function () {
-  // Create a monk connection
-  const db = monk('localhost/test')
-  const UserCollection = db.get('users')
+  var UserCollection
+  var db
 
   // Create a corm connection
-  const model = corm('localhost/test')
-  const User = model('users')
+  var model = corm('localhost/test')
+  var User = model('users')
+
+  // Connect to mongo
+  before(function (done) {
+    MongoClient.connect('mongodb://localhost/test', function (err, _db) {
+      if (err) return done(err)
+      db = _db
+      UserCollection = db.collection('users')
+      done()
+    })
+  })
 
   it('should trigger create hooks on first save', function* () {
     var count = 0
 
-    const user = User.build({
+    var user = User.build({
       name: 'test'
     })
 
@@ -37,7 +46,7 @@ describe('hooks', function () {
   it('should not trigger create hooks on subsequent saves', function* () {
     var count = 0
 
-    const user = yield User.create({
+    var user = yield User.create({
       name: 'test'
     })
 
@@ -59,7 +68,7 @@ describe('hooks', function () {
   it('should not trigger update hooks on first save', function* () {
     var count = 0
 
-    const user = User.build({
+    var user = User.build({
       name: 'test'
     })
 
@@ -81,7 +90,7 @@ describe('hooks', function () {
   it('should trigger update hooks on subsequent saves', function* () {
     var count = 0
 
-    const user = yield User.create({
+    var user = yield User.create({
       name: 'test'
     })
 
@@ -103,7 +112,7 @@ describe('hooks', function () {
   it('should always trigger validate hooks', function* () {
     var count = 0
 
-    const user = User.build({
+    var user = User.build({
       name: 'test'
     })
 
@@ -129,7 +138,7 @@ describe('hooks', function () {
   it('should always trigger save hooks', function* () {
     var count = 0
 
-    const user = User.build({
+    var user = User.build({
       name: 'test'
     })
 

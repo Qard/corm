@@ -1,22 +1,35 @@
-const should = require('should')
-const monk = require('monk')
-const corm = require('../')
+var MongoClient = require('mongodb').MongoClient
+var should = require('should')
+var corm = require('../')
 
 describe('remove', function () {
-  // Create a monk connection
-  const db = monk('localhost/test')
-  const UserCollection = db.get('users')
+  var UserCollection
+  var db
 
   // Create a corm connection
-  const model = corm('localhost/test')
-  const User = model('users')
+  var model = corm('localhost/test')
+  var User = model('users')
+
+  // Connect to mongo
+  before(function (done) {
+    MongoClient.connect('mongodb://localhost/test', function (err, _db) {
+      if (err) return done(err)
+      db = _db
+      UserCollection = db.collection('users')
+      done()
+    })
+  })
 
   // Create a test user before each test
   var testUser
   beforeEach(function* () {
-    testUser = yield UserCollection.insert({
-      name: 'test'
-    })
+    testUser = yield function (done) {
+      UserCollection.insert({
+        name: 'test'
+      }, function (err, res) {
+        done(err, res && res[0])
+      })
+    }
   })
 
   it('should remove a model', function* () {
@@ -29,7 +42,11 @@ describe('remove', function () {
     user.should.not.have.property('_id')
 
     // The data should have been removed from the database
-    var found = yield UserCollection.findById(testUser._id)
+    var found = yield function (done) {
+      UserCollection.findOne({
+        _id: testUser._id
+      }, done)
+    }
     should.not.exist(found)
   })
 
@@ -37,7 +54,11 @@ describe('remove', function () {
     yield User.removeById(testUser._id)
 
     // The data should have been removed from the database
-    var found = yield UserCollection.findById(testUser._id)
+    var found = yield function (done) {
+      UserCollection.findOne({
+        _id: testUser._id
+      }, done)
+    }
     should.not.exist(found)
   })
 
@@ -47,7 +68,11 @@ describe('remove', function () {
     })
 
     // The data should have been removed from the database
-    var found = yield UserCollection.findById(testUser._id)
+    var found = yield function (done) {
+      UserCollection.findOne({
+        _id: testUser._id
+      }, done)
+    }
     should.not.exist(found)
   })
 

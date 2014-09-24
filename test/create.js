@@ -1,18 +1,29 @@
-const monk = require('monk')
-const corm = require('../')
+var MongoClient = require('mongodb').MongoClient
+var corm = require('../')
 
 describe('create', function () {
-  // Create a monk connection
-  const db = monk('localhost/test')
-  const UserCollection = db.get('users')
+  var UserCollection
+  var db
 
   // Create a corm connection
-  const model = corm('localhost/test')
-  const User = model('users')
+  var model = corm('localhost/test')
+  var User = model('users')
+
+  // Connect to mongo
+  before(function (done) {
+    MongoClient.connect('mongodb://localhost/test', function (err, _db) {
+      if (err) return done(err)
+      db = _db
+      UserCollection = db.collection('users')
+      done()
+    })
+  })
 
   // Clear all users after each test
   afterEach(function* () {
-    yield UserCollection.remove({})
+    yield function (done) {
+      UserCollection.remove({}, done)
+    }
   })
 
   it('should create a model', function* () {
@@ -25,7 +36,9 @@ describe('create', function () {
     user.should.have.property('_id')
 
     // Should have been stored in the database
-    var found = yield UserCollection.findOne({ name: 'test' })
+    var found = yield function (done) {
+      UserCollection.findOne({ name: 'test' }, done)
+    }
     found._id.toString().should.equal(user._id.toString())
     found.should.have.property('name', 'test')
   })
@@ -44,7 +57,9 @@ describe('create', function () {
     user.should.have.property('_id')
 
     // Should have been stored in the database
-    var found = yield UserCollection.findOne({ name: 'test' })
+    var found = yield function (done) {
+      UserCollection.findOne({ name: 'test' }, done)
+    }
     found._id.toString().should.equal(user._id.toString())
     found.should.have.property('name', 'test')
   })

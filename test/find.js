@@ -1,30 +1,46 @@
-const monk = require('monk')
-const corm = require('../')
+var MongoClient = require('mongodb').MongoClient
+var corm = require('../')
 
 describe('find', function () {
-  // Create a monk connection
-  const db = monk('localhost/test')
-  const UserCollection = db.get('users')
+  var UserCollection
+  var db
 
   // Create a corm connection
-  const model = corm('localhost/test')
-  const User = model('users')
+  var model = corm('localhost/test')
+  var User = model('users')
+
+  // Connect to mongo
+  before(function (done) {
+    MongoClient.connect('mongodb://localhost/test', function (err, _db) {
+      if (err) return done(err)
+      db = _db
+      UserCollection = db.collection('users')
+      done()
+    })
+  })
 
   // Add some test users first
-  const users = []
+  var users = []
   before(function* () {
-    users.push(yield UserCollection.insert({ name: 'test1' }))
-    users.push(yield UserCollection.insert({ name: 'test2' }))
-    users.push(yield UserCollection.insert({ name: 'other' }))
+    var names = ['test1', 'test2', 'other']
+    users = yield names.map(function (name) {
+      return function (done) {
+        UserCollection.insert({ name: name }, function (err, res) {
+          done(err, res && res[0])
+        })
+      }
+    })
   })
 
   // Clear all users after the test
   after(function* () {
-    yield UserCollection.remove({})
+    yield function (done) {
+      UserCollection.remove({}, done)
+    }
   })
 
   it('should find a model by id', function* () {
-    const found = yield User.findById(users[0]._id)
+    var found = yield User.findById(users[0]._id)
 
     // Should be an instance of the User model
     // and have matching _id and name values
@@ -35,7 +51,7 @@ describe('find', function () {
   })
 
   it('should find a model by criteria', function* () {
-    const found = yield User.findOne({
+    var found = yield User.findOne({
       name: users[1].name
     })
 
@@ -48,7 +64,7 @@ describe('find', function () {
   })
 
   it('should find many models by criteria', function* () {
-    const found = yield User.find({
+    var found = yield User.find({
       name: /^test/
     })
 
