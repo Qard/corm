@@ -1,49 +1,33 @@
-var MongoClient = require('mongodb').MongoClient
-var corm = require('../')
+import mongo from 'promised-mongo'
+import corm from '../'
 
 describe('findOrCreate', function () {
-  var UserCollection
-  var db
+  // Create a monk connection
+  const db = mongo('localhost/test')
+  const UserCollection = db.collection('users')
 
   // Create a corm connection
-  var model = corm('localhost/test')
-  var User = model('users')
-
-  // Connect to mongo
-  before(function (done) {
-    MongoClient.connect('mongodb://localhost/test', function (err, _db) {
-      if (err) return done(err)
-      db = _db
-      UserCollection = db.collection('users')
-      done()
-    })
-  })
+  const model = corm('localhost/test')
+  const User = model('users')
 
   // Clear all users before the test
-  before(function* () {
-    yield function (done) {
-      UserCollection.remove({}, done)
-    }
+  before(async function () {
+    await UserCollection.remove({})
   })
 
   // Clear all users after each test
-  afterEach(function* () {
-    yield function (done) {
-      UserCollection.remove({}, done)
-    }
+  afterEach(async function () {
+    await UserCollection.remove({})
   })
 
-  it('should find if record exists', function* () {
+  it('should find if record exists', async function () {
     var data = { name: 'me' }
 
     // Create a record to find
-    var created = yield function (done) {
-      UserCollection.insert(data, done)
-    }
-    created = created[0]
+    var created = await UserCollection.insert(data)
 
     // Find the record
-    var found = yield User.findOrCreate(data)
+    var found = await User.findOrCreate(data)
 
     // Should be an instance of the User model
     found.should.be.instanceOf(User)
@@ -52,16 +36,14 @@ describe('findOrCreate', function () {
     found.should.have.property('name', data.name)
   })
 
-  it('should create if record does not exist', function* () {
+  it('should create if record does not exist', async function () {
     var data = { name: 'me' }
 
     // Create a record to find
-    var created = yield User.findOrCreate(data)
+    const created = await User.findOrCreate(data)
 
     // Find the record
-    var found = yield function (done) {
-      UserCollection.findOne(data, done)
-    }
+    var found = await UserCollection.findOne(data)
 
     // Should be an instance of the User model
     created.should.be.instanceOf(User)

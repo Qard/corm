@@ -1,44 +1,44 @@
-var MongoClient = require('mongodb').MongoClient
-var corm = require('../')
+import mongo from 'promised-mongo'
+import corm from '../'
 
 describe('createOrUpdate', function () {
-  var UserCollection
-  var db
+  // Create a monk connection
+  const db = mongo('localhost/test')
+  const UserCollection = db.collection('users')
 
   // Create a corm connection
-  var model = corm('localhost/test')
-  var User = model('users')
-
-  // Connect to mongo
-  before(function (done) {
-    MongoClient.connect('mongodb://localhost/test', function (err, _db) {
-      if (err) return done(err)
-      db = _db
-      UserCollection = db.collection('users')
-      done()
-    })
-  })
+  const model = corm('localhost/test')
+  const User = model('users')
 
   // Clear all users before the test
-  before(function* () {
-    yield function (done) {
-      UserCollection.remove({}, done)
-    }
+  before(async function () {
+    await UserCollection.remove({})
   })
 
   // Clear all users after each test
-  afterEach(function* () {
-    yield function (done) {
-      UserCollection.remove({}, done)
-    }
+  afterEach(async function () {
+    await UserCollection.remove({})
   })
 
-  it('should create new record', function* () {
+  it('should create new record', async function () {
+    var query = { email: 'me@example.com', name: 'me' }
+
+    // Create the record
+    var created = await User.createOrUpdate(query)
+
+    // Should be an instance of the User model
+    created.should.be.instanceOf(User)
+    created.should.have.property('_id')
+    created.should.have.property('email', query.email)
+    created.should.have.property('name', query.name)
+  })
+
+  it('should create new record with extra data', async function () {
     var query = { email: 'me@example.com' }
     var data = { name: 'me' }
 
     // Create the record
-    var created = yield User.createOrUpdate(query, data)
+    var created = await User.createOrUpdate(query, data)
 
     // Should be an instance of the User model
     created.should.be.instanceOf(User)
@@ -47,18 +47,15 @@ describe('createOrUpdate', function () {
     created.should.have.property('name', data.name)
   })
 
-  it('should update existing record', function* () {
+  it('should update existing record', async function () {
     var query = { email: 'me@example.com' }
     var data = { name: 'me' }
 
     // Generate user with no name
-    var created = yield function (done) {
-      UserCollection.insert(query, done)
-    }
-    created = created[0]
+    var created = await UserCollection.insert(query)
 
     // Update it with a name
-    var updated = yield User.createOrUpdate(query, data)
+    var updated = await User.createOrUpdate(query, data)
 
     // Should be an instance of the User model
     updated.should.be.instanceOf(User)
