@@ -1,6 +1,6 @@
 {
   "name": "corm",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "An ORM using async/await",
   "author": "Stephen Belanger <admin@stephenbelanger.com>",
   "main": "dist/index.js",
