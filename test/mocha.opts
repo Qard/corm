@@ -1,4 +1,0 @@
---require co-mocha
---require should
---reporter spec
---growl

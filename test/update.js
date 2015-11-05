@@ -1,79 +1,79 @@
-const monk = require('monk')
-const corm = require('../')
+import mongo from 'promised-mongo'
+import corm from '../'
 
 describe('update', function () {
   // Create a monk connection
-  const db = monk('localhost/test')
-  const UserCollection = db.get('users')
+  const db = mongo('localhost/test')
+  const UserCollection = db.collection('users')
 
   // Create a corm connection
   const model = corm('localhost/test')
   const User = model('users')
 
-  it('should update a model', function* () {
+  it('should update a model', async function () {
     // Should create a user
-    const user = yield User.create({
+    const user = await User.create({
       name: 'test'
     })
     user.should.have.property('name', 'test')
 
     // Should have changed the name property
-    yield user.update({ name: 'updated' })
+    await user.update({ name: 'updated' })
     user.should.have.property('name', 'updated')
 
     // Should have updated in the database
-    const found = yield UserCollection.findById(user._id)
+    const found = await UserCollection.findOne({ _id: user._id })
     found.should.have.property('name', 'updated')
 
     // Remove the test data
-    yield user.remove()
+    await user.remove()
   })
 
-  it('should update by id', function* () {
+  it('should update by id', async function () {
     // Create test record in the database
-    const user = yield UserCollection.insert({
+    const user = await UserCollection.insert({
       name: 'test'
     })
 
     // Should have changed the name property
-    yield User.updateById(user._id, {
+    await User.updateById(user._id, {
       name: 'updated'
     })
 
     // Should have updated in the database
-    const found = yield UserCollection.findById(user._id)
+    const found = await UserCollection.findOne({ _id: user._id })
     found.should.have.property('name', 'updated')
 
     // Remove the test data
-    yield UserCollection.remove({ _id: user._id })
+    await UserCollection.remove({ _id: user._id })
   })
 
-  it('should update by criteria', function* () {
+  it('should update by criteria', async function () {
     // Create test record in the database
-    const user = yield UserCollection.insert({
+    const user = await UserCollection.insert({
       name: 'test'
     })
 
     // Should have changed the name property
-    yield User.update({
+    await User.update({
       name: user.name
     }, {
       name: 'updated'
     })
 
     // Should have updated in the database
-    const found = yield UserCollection.findById(user._id)
+    const found = await UserCollection.findOne({ _id: user._id })
     found.should.have.property('name', 'updated')
 
     // Remove the test data
-    yield UserCollection.remove({ _id: user._id })
+    await UserCollection.remove({ _id: user._id })
   })
 
-  it('should not update a model without an id', function* () {
+  it('should not update a model without an id', async function () {
     var model = new User({})
     var err
     try {
-      yield model.update()
+      await model.update()
     } catch (e) {
       err = e
     }

@@ -1,10 +1,11 @@
-const monk = require('monk')
-const corm = require('../')
+import mongo from 'promised-mongo'
+import should from 'should'
+import corm from '../'
 
 describe('find', function () {
   // Create a monk connection
-  const db = monk('localhost/test')
-  const UserCollection = db.get('users')
+  const db = mongo('localhost/test')
+  const UserCollection = db.collection('users')
 
   // Create a corm connection
   const model = corm('localhost/test')
@@ -12,19 +13,19 @@ describe('find', function () {
 
   // Add some test users first
   const users = []
-  before(function* () {
-    users.push(yield UserCollection.insert({ name: 'test1' }))
-    users.push(yield UserCollection.insert({ name: 'test2' }))
-    users.push(yield UserCollection.insert({ name: 'other' }))
+  before(async function () {
+    users.push(await UserCollection.insert({ name: 'test1' }))
+    users.push(await UserCollection.insert({ name: 'test2' }))
+    users.push(await UserCollection.insert({ name: 'other' }))
   })
 
   // Clear all users after the test
-  after(function* () {
-    yield UserCollection.remove({})
+  after(async function () {
+    await UserCollection.remove({})
   })
 
-  it('should find a model by id', function* () {
-    const found = yield User.findById(users[0]._id)
+  it('should find a model by id', async function () {
+    const found = await User.findById(users[0]._id)
 
     // Should be an instance of the User model
     // and have matching _id and name values
@@ -34,8 +35,13 @@ describe('find', function () {
     found.should.have.property('name', users[0].name)
   })
 
-  it('should find a model by criteria', function* () {
-    const found = yield User.findOne({
+  it('should not find a non-existent model by id', async function () {
+    const found = await User.findById('nope')
+    should.not.exist(found)
+  })
+
+  it('should find a model by criteria', async function () {
+    const found = await User.findOne({
       name: users[1].name
     })
 
@@ -47,8 +53,8 @@ describe('find', function () {
     found.should.have.property('name', users[1].name)
   })
 
-  it('should find many models by criteria', function* () {
-    const found = yield User.find({
+  it('should find many models by criteria', async function () {
+    const found = await User.find({
       name: /^test/
     })
 
@@ -65,11 +71,18 @@ describe('find', function () {
     })
   })
 
-  it('should not fetch a model without an id', function* () {
+  it('should return empty array when nothing found', async function () {
+    const found = await User.find({
+      name: 'nope'
+    })
+    found.should.have.lengthOf(0)
+  })
+
+  it('should not fetch a model without an id', async function () {
     var model = new User({})
     var err
     try {
-      yield model.fetch()
+      await model.fetch()
     } catch (e) {
       err = e
     }
