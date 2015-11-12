@@ -36,7 +36,9 @@ describe('find', function () {
   })
 
   it('should not find a non-existent model by id', async function () {
-    const found = await User.findById('nope')
+    let found
+    try { found = await User.findById('nope') }
+    catch (e) {}
     should.not.exist(found)
   })
 
