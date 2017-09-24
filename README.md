@@ -1,5 +1,7 @@
 # CORM
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Qard/corm.svg)](https://greenkeeper.io/)
+
 ![i like corm](http://kimaguresan.files.wordpress.com/2014/02/f3b0e52f0cb3ecbf0ee58978238b6563_h.jpg)
 
 [![build status](https://secure.travis-ci.org/Qard/corm.png)](http://travis-ci.org/Qard/corm) [![Coverage Status](https://coveralls.io/repos/Qard/corm/badge.png)](https://coveralls.io/r/Qard/corm)
