@@ -2,7 +2,7 @@
 
 ![i like corm](http://kimaguresan.files.wordpress.com/2014/02/f3b0e52f0cb3ecbf0ee58978238b6563_h.jpg)
 
-[![build status](https://secure.travis-ci.org/Qard/corm.png)](http://travis-ci.org/Qard/corm) [![Coverage Status](https://coveralls.io/repos/Qard/corm/badge.png)](https://coveralls.io/r/Qard/corm)
+[![build status](https://secure.travis-ci.org/Qard/corm.png)](http://travis-ci.org/Qard/corm) [![Coverage Status](https://coveralls.io/repos/Qard/corm/badge.png)](https://coveralls.io/r/Qard/corm) [![Greenkeeper badge](https://badges.greenkeeper.io/Qard/corm.svg)](https://greenkeeper.io/)
 
 This is the beginnings of a project to make a full-featured ORM that takes advantage of generators, which should make the codebase and usage of the library vastly simpler. I spent weeks digging through existing node ORM implementations, only to find myself dissatisfied with how convoluted they all seemed to be.
 
